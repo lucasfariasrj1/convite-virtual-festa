@@ -22,18 +22,25 @@ const ConfirmarPresenca = () => {
 
     try {
       // Buscar convidado pelo nome
-      const response = await fetch(`http://localhost:3000/convidados?nome=${encodeURIComponent(nome)}`);
+      const response = await fetch('http://localhost:3000/convidados');
       
       if (response.ok) {
-        const convidados = await response.json();
+        const result = await response.json();
+        const convidados = result.data || [];
         const convidado = convidados.find((c: any) => 
-          c.nome.toLowerCase().includes(nome.toLowerCase())
+          c.nome.toLowerCase().includes(nome.toLowerCase().trim())
         );
 
         if (convidado) {
-          // Confirmar presença
+          // Confirmar presença usando o ID do convidado
           const confirmarResponse = await fetch(`http://localhost:3000/convidados/${convidado.id}/confirmar`, {
             method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              criancas: [] // Por enquanto vazio, depois podemos adicionar interface para crianças
+            })
           });
 
           if (confirmarResponse.ok) {
@@ -43,6 +50,8 @@ const ConfirmarPresenca = () => {
               title: "🎉 Presença confirmada!",
               description: "Obrigado por confirmar! Mal podemos esperar para celebrar com você!",
             });
+          } else {
+            throw new Error('Erro ao confirmar presença');
           }
         } else {
           toast({
@@ -51,6 +60,8 @@ const ConfirmarPresenca = () => {
             variant: "destructive",
           });
         }
+      } else {
+        throw new Error('Erro ao buscar convidados');
       }
     } catch (error) {
       toast({

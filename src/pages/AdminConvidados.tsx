@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, UserCheck, Baby, Heart, Copy, Send } from "lucide-react";
+import { Users, UserCheck, Baby, Heart, Copy, Send, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CadastroConvidado from "@/components/CadastroConvidado";
 import LinkConfirmacao from "@/components/LinkConfirmacao";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface Convidado {
   id: number;
@@ -61,6 +62,30 @@ const AdminConvidados = () => {
     return total + 1 + (convidado.tem_acompanhante ? convidado.qtd_acompanhantes : 0);
   }, 0);
 
+  const handleDeleteConvidado = async (convidado: Convidado) => {
+    try {
+      const response = await fetch(`http://localhost:3000/convidados/${convidado.id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Convidado removido",
+          description: `${convidado.nome} foi removido da lista`,
+        });
+        fetchConvidados(); // Atualizar a lista
+      } else {
+        throw new Error('Erro ao remover convidado');
+      }
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível remover o convidado",
+        variant: "destructive"
+      });
+    }
+  };
+
   const ConvidadoRow = ({ convidado }: { convidado: Convidado }) => (
     <TableRow>
       <TableCell className="font-medium">{convidado.nome}</TableCell>
@@ -73,7 +98,40 @@ const AdminConvidados = () => {
       <TableCell>{convidado.leva_crianca ? <Baby className="h-4 w-4" /> : "-"}</TableCell>
       <TableCell>{1 + (convidado.tem_acompanhante ? convidado.qtd_acompanhantes : 0)}</TableCell>
       <TableCell>
-        <LinkConfirmacao nomeConvidado={convidado.nome} />
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <LinkConfirmacao nomeConvidado={convidado.nome} />
+          </div>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                size="sm"
+                variant="outline"
+                className="bg-red-500/20 hover:bg-red-500/30 text-red-300 border-red-500/30"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Tem certeza que deseja remover {convidado.nome} da lista de convidados? 
+                  Esta ação não pode ser desfeita.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction 
+                  onClick={() => handleDeleteConvidado(convidado)}
+                  className="bg-red-500 hover:bg-red-600"
+                >
+                  Remover
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </TableCell>
     </TableRow>
   );
@@ -161,7 +219,7 @@ const AdminConvidados = () => {
                         <TableHead className="text-white">Acompanhantes</TableHead>
                         <TableHead className="text-white">Crianças</TableHead>
                         <TableHead className="text-white">Total Pessoas</TableHead>
-                        <TableHead className="text-white">Link Confirmação</TableHead>
+                        <TableHead className="text-white">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -183,7 +241,7 @@ const AdminConvidados = () => {
                         <TableHead className="text-white">Acompanhantes</TableHead>
                         <TableHead className="text-white">Crianças</TableHead>
                         <TableHead className="text-white">Total Pessoas</TableHead>
-                        <TableHead className="text-white">Link Confirmação</TableHead>
+                        <TableHead className="text-white">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
