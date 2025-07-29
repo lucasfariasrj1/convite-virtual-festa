@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, UserCheck, Baby, Heart, Copy, Send, Trash2 } from "lucide-react";
+import { Users, UserCheck, Baby, Heart, Copy, Send, Trash2, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CadastroConvidado from "@/components/CadastroConvidado";
 import LinkConfirmacao from "@/components/LinkConfirmacao";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface Convidado {
   id: number;
@@ -95,7 +96,51 @@ const AdminConvidados = () => {
         </Badge>
       </TableCell>
       <TableCell>{convidado.tem_acompanhante ? convidado.qtd_acompanhantes : 0}</TableCell>
-      <TableCell>{convidado.leva_crianca ? <Baby className="h-4 w-4" /> : "-"}</TableCell>
+      <TableCell>
+        {convidado.leva_crianca && convidado.criancas && convidado.criancas.length > 0 ? (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                size="sm"
+                variant="outline"
+                className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border-blue-500/30"
+              >
+                <Eye className="h-4 w-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-white/95 backdrop-blur-md border-white/20">
+              <DialogHeader>
+                <DialogTitle className="text-purple-600">
+                  Crianças de {convidado.nome}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-3">
+                {convidado.criancas.map((crianca) => (
+                  <div
+                    key={crianca.id}
+                    className="flex items-center justify-between p-3 bg-purple-50 rounded-lg border border-purple-200"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Baby className="h-5 w-5 text-purple-500" />
+                      <div>
+                        <p className="font-medium text-purple-800">{crianca.nome}</p>
+                        <p className="text-sm text-purple-600">{crianca.idade} anos</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
+        ) : convidado.leva_crianca ? (
+          <div className="flex items-center gap-1 text-yellow-300">
+            <Baby className="h-4 w-4" />
+            <span className="text-sm">Pendente</span>
+          </div>
+        ) : (
+          "-"
+        )}
+      </TableCell>
       <TableCell>{1 + (convidado.tem_acompanhante ? convidado.qtd_acompanhantes : 0)}</TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
