@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, UserCheck, Baby, Heart } from "lucide-react";
+import { Users, UserCheck, Baby, Heart, Copy, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import CadastroConvidado from "@/components/CadastroConvidado";
+import LinkConfirmacao from "@/components/LinkConfirmacao";
 
 interface Convidado {
   id: number;
@@ -70,6 +72,9 @@ const AdminConvidados = () => {
       <TableCell>{convidado.tem_acompanhante ? convidado.qtd_acompanhantes : 0}</TableCell>
       <TableCell>{convidado.leva_crianca ? <Baby className="h-4 w-4" /> : "-"}</TableCell>
       <TableCell>{1 + (convidado.tem_acompanhante ? convidado.qtd_acompanhantes : 0)}</TableCell>
+      <TableCell>
+        <LinkConfirmacao nomeConvidado={convidado.nome} />
+      </TableCell>
     </TableRow>
   );
 
@@ -125,6 +130,11 @@ const AdminConvidados = () => {
           </Card>
         </div>
 
+        {/* Formulário de Cadastro */}
+        <div className="mb-8">
+          <CadastroConvidado onConvidadoCadastrado={fetchConvidados} />
+        </div>
+
         {/* Tabelas */}
         <Card className="bg-white/10 backdrop-blur-md border-white/20">
           <CardHeader>
@@ -142,7 +152,7 @@ const AdminConvidados = () => {
               </TabsList>
 
               <TabsContent value="todos" className="mt-6">
-                <div className="rounded-md border border-white/20 bg-white/5">
+                <div className="rounded-md border border-white/20 bg-white/5 overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow className="border-white/20 hover:bg-white/5">
@@ -151,6 +161,7 @@ const AdminConvidados = () => {
                         <TableHead className="text-white">Acompanhantes</TableHead>
                         <TableHead className="text-white">Crianças</TableHead>
                         <TableHead className="text-white">Total Pessoas</TableHead>
+                        <TableHead className="text-white">Link Confirmação</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -163,7 +174,7 @@ const AdminConvidados = () => {
               </TabsContent>
 
               <TabsContent value="confirmados" className="mt-6">
-                <div className="rounded-md border border-white/20 bg-white/5">
+                <div className="rounded-md border border-white/20 bg-white/5 overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow className="border-white/20 hover:bg-white/5">
@@ -172,6 +183,7 @@ const AdminConvidados = () => {
                         <TableHead className="text-white">Acompanhantes</TableHead>
                         <TableHead className="text-white">Crianças</TableHead>
                         <TableHead className="text-white">Total Pessoas</TableHead>
+                        <TableHead className="text-white">Link Confirmação</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
