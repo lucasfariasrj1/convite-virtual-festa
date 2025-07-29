@@ -22,7 +22,7 @@ const ConfirmarPresenca = () => {
 
     try {
       // Buscar convidado pelo nome
-      const response = await fetch('apiinvite.lf.dev.br/convidados');
+      const response = await fetch('https://apiinvite.lf.dev.br/convidados');
       
       if (response.ok) {
         const result = await response.json();
@@ -33,7 +33,7 @@ const ConfirmarPresenca = () => {
 
         if (convidado) {
           // Confirmar presença usando o ID do convidado
-          const confirmarResponse = await fetch(`apiinvite.lf.dev.br/convidados/${convidado.id}/confirmar`, {
+          const confirmarResponse = await fetch(`https://apiinvite.lf.dev.br/convidados/${convidado.id}/confirmar`, {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',

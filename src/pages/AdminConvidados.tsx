@@ -32,7 +32,7 @@ const AdminConvidados = () => {
 
   const fetchConvidados = async () => {
     try {
-      const response = await fetch('apiinvite.lf.dev.br/convidados');
+      const response = await fetch('https://apiinvite.lf.dev.br/convidados');
       if (response.ok) {
         const result = await response.json();
         setConvidados(result.data || []);
@@ -64,7 +64,7 @@ const AdminConvidados = () => {
 
   const handleDeleteConvidado = async (convidado: Convidado) => {
     try {
-      const response = await fetch(`apiinvite.lf.dev.br/convidados/${convidado.id}`, {
+      const response = await fetch(`https://apiinvite.lf.dev.br/convidados/${convidado.id}`, {
         method: 'DELETE',
       });
 

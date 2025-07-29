@@ -34,7 +34,7 @@ const CadastroConvidado = ({ onConvidadoCadastrado }: CadastroConvidadoProps) =>
     setLoading(true);
 
     try {
-      const response = await fetch('apiinvite.lf.dev.br/convidados', {
+      const response = await fetch('https://apiinvite.lf.dev.br/convidados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

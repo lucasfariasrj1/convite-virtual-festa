@@ -56,7 +56,7 @@ const ConviteForm = () => {
 
     try {
       // Criar convidado
-      const response = await fetch('apiinvite.lf.dev.br/convidados', {
+      const response = await fetch('https://apiinvite.lf.dev.br/convidados', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const ConviteForm = () => {
         const convidado = await response.json();
         
         // Confirmar presença automaticamente com crianças
-        const confirmarResponse = await fetch(`apiinvite.lf.dev.br/convidados/${convidado.data.id}/confirmar`, {
+        const confirmarResponse = await fetch(`https://apiinvite.lf.dev.br/convidados/${convidado.data.id}/confirmar`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
