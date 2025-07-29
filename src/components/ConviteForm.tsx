@@ -5,13 +5,19 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, Sparkles, Gift, Users } from "lucide-react";
+import { Heart, Sparkles, Gift, Users, Plus, Trash2, Baby } from "lucide-react";
+
+interface CriancaData {
+  nome: string;
+  idade: number;
+}
 
 interface ConvidadoData {
   nome: string;
   tem_acompanhante: boolean;
   leva_crianca: boolean;
   qtd_acompanhantes: number;
+  criancas?: CriancaData[];
 }
 
 const ConviteForm = () => {
@@ -20,10 +26,29 @@ const ConviteForm = () => {
     tem_acompanhante: false,
     leva_crianca: false,
     qtd_acompanhantes: 0,
+    criancas: [],
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const { toast } = useToast();
+
+  const adicionarCrianca = () => {
+    setFormData({
+      ...formData,
+      criancas: [...(formData.criancas || []), { nome: "", idade: 0 }],
+    });
+  };
+
+  const removerCrianca = (index: number) => {
+    const novasCriancas = formData.criancas?.filter((_, i) => i !== index) || [];
+    setFormData({ ...formData, criancas: novasCriancas });
+  };
+
+  const atualizarCrianca = (index: number, campo: keyof CriancaData, valor: string | number) => {
+    const novasCriancas = [...(formData.criancas || [])];
+    novasCriancas[index] = { ...novasCriancas[index], [campo]: valor };
+    setFormData({ ...formData, criancas: novasCriancas });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,9 +67,15 @@ const ConviteForm = () => {
       if (response.ok) {
         const convidado = await response.json();
         
-        // Confirmar presença automaticamente
-        const confirmarResponse = await fetch(`http://localhost:3000/convidados/${convidado.id}/confirmar`, {
+        // Confirmar presença automaticamente com crianças
+        const confirmarResponse = await fetch(`http://localhost:3000/convidados/${convidado.data.id}/confirmar`, {
           method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            criancas: formData.criancas || [],
+          }),
         });
 
         if (confirmarResponse.ok) {
@@ -95,10 +126,15 @@ const ConviteForm = () => {
                   <span className="font-medium">{formData.qtd_acompanhantes}</span>
                 </div>
               )}
-              {formData.leva_crianca && (
-                <div className="flex items-center justify-between">
-                  <span>Crianças:</span>
-                  <span className="font-medium">Sim</span>
+              {formData.leva_crianca && formData.criancas && formData.criancas.length > 0 && (
+                <div className="space-y-1">
+                  <span className="text-sm font-medium">Crianças:</span>
+                  {formData.criancas.map((crianca, index) => (
+                    <div key={index} className="text-xs flex justify-between ml-2">
+                      <span>{crianca.nome}</span>
+                      <span>{crianca.idade} anos</span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -184,15 +220,95 @@ const ConviteForm = () => {
               <Checkbox
                 id="leva_crianca"
                 checked={formData.leva_crianca}
-                onCheckedChange={(checked) => 
-                  setFormData({ ...formData, leva_crianca: checked as boolean })
-                }
+                onCheckedChange={(checked) => {
+                  setFormData({ 
+                    ...formData, 
+                    leva_crianca: checked as boolean,
+                    criancas: checked ? formData.criancas : [],
+                  });
+                }}
               />
               <Label htmlFor="leva_crianca" className="flex items-center gap-2 cursor-pointer">
-                <Heart className="w-4 h-4 text-primary" />
+                <Baby className="w-4 h-4 text-primary" />
                 Vou levar criança(s)
               </Label>
             </div>
+
+            {formData.leva_crianca && (
+              <div className="ml-6 space-y-4">
+                {(!formData.criancas || formData.criancas.length === 0) ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={adicionarCrianca}
+                    className="w-full border-dashed border-primary/50 text-primary hover:bg-primary/5"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Adicionar criança
+                  </Button>
+                ) : (
+                  <>
+                    <div className="space-y-3">
+                      {formData.criancas?.map((crianca, index) => (
+                    <div key={index} className="space-y-3 p-4 border border-border/50 rounded-lg bg-background/30">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm font-medium text-primary">
+                          Criança {index + 1}
+                        </Label>
+                        {formData.criancas && formData.criancas.length > 1 && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removerCrianca(index)}
+                            className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <Label className="text-xs">Nome</Label>
+                          <Input
+                            type="text"
+                            placeholder="Nome da criança"
+                            value={crianca.nome}
+                            onChange={(e) => atualizarCrianca(index, "nome", e.target.value)}
+                            className="bg-background/50 border-border/50 focus:border-primary transition-colors text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs">Idade</Label>
+                          <Input
+                            type="number"
+                            min="0"
+                            max="17"
+                            placeholder="0"
+                            value={crianca.idade || ""}
+                            onChange={(e) => atualizarCrianca(index, "idade", parseInt(e.target.value) || 0)}
+                            className="bg-background/50 border-border/50 focus:border-primary transition-colors text-sm"
+                          />
+                        </div>
+                      </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={adicionarCrianca}
+                    className="w-full border-dashed border-primary/50 text-primary hover:bg-primary/5"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Adicionar outra criança
+                  </Button>
+                </>
+                )}
+              </div>
+            )}
           </div>
 
           <Button 
