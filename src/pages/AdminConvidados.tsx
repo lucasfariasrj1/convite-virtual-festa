@@ -75,14 +75,14 @@ const AdminConvidados = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-party-pink via-party-purple to-party-gold flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-party flex items-center justify-center">
         <div className="text-white text-xl">Carregando...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-party-pink via-party-purple to-party-gold p-6">
+    <div className="min-h-screen bg-gradient-party p-6">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-8">
           <Heart className="h-16 w-16 mx-auto mb-4 text-white animate-pulse" />
