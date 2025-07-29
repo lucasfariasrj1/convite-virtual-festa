@@ -13,8 +13,13 @@ interface Convidado {
   tem_acompanhante: boolean;
   leva_crianca: boolean;
   qtd_acompanhantes: number;
-  presenca_confirmada?: boolean;
-  created_at?: string;
+  confirmado?: boolean;
+  createdAt?: string;
+  criancas?: Array<{
+    id: number;
+    nome: string;
+    idade: number;
+  }>;
 }
 
 const AdminConvidados = () => {
@@ -26,8 +31,8 @@ const AdminConvidados = () => {
     try {
       const response = await fetch('http://localhost:3000/convidados');
       if (response.ok) {
-        const data = await response.json();
-        setConvidados(data);
+        const result = await response.json();
+        setConvidados(result.data || []);
       } else {
         throw new Error('Erro ao carregar convidados');
       }
@@ -46,7 +51,7 @@ const AdminConvidados = () => {
     fetchConvidados();
   }, []);
 
-  const convidadosConfirmados = convidados.filter(c => c.presenca_confirmada);
+  const convidadosConfirmados = convidados.filter(c => c.confirmado);
   const totalPessoas = convidados.reduce((total, convidado) => {
     return total + 1 + (convidado.tem_acompanhante ? convidado.qtd_acompanhantes : 0);
   }, 0);
@@ -58,8 +63,8 @@ const AdminConvidados = () => {
     <TableRow>
       <TableCell className="font-medium">{convidado.nome}</TableCell>
       <TableCell>
-        <Badge variant={convidado.presenca_confirmada ? "default" : "secondary"}>
-          {convidado.presenca_confirmada ? "Confirmado" : "Pendente"}
+        <Badge variant={convidado.confirmado ? "default" : "secondary"}>
+          {convidado.confirmado ? "Confirmado" : "Pendente"}
         </Badge>
       </TableCell>
       <TableCell>{convidado.tem_acompanhante ? convidado.qtd_acompanhantes : 0}</TableCell>
