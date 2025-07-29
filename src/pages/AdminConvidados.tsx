@@ -95,7 +95,24 @@ const AdminConvidados = () => {
         </Badge>
       </TableCell>
       <TableCell>{convidado.tem_acompanhante ? convidado.qtd_acompanhantes : 0}</TableCell>
-      <TableCell>{convidado.leva_crianca ? <Baby className="h-4 w-4" /> : "-"}</TableCell>
+      <TableCell>
+        {convidado.leva_crianca && convidado.criancas && convidado.criancas.length > 0 ? (
+          <div className="space-y-1">
+            {convidado.criancas.map((crianca, index) => (
+              <div key={crianca.id} className="text-sm text-white/80">
+                {crianca.nome} ({crianca.idade} anos)
+              </div>
+            ))}
+          </div>
+        ) : convidado.leva_crianca ? (
+          <div className="flex items-center gap-1 text-yellow-300">
+            <Baby className="h-4 w-4" />
+            <span className="text-sm">Pendente</span>
+          </div>
+        ) : (
+          "-"
+        )}
+      </TableCell>
       <TableCell>{1 + (convidado.tem_acompanhante ? convidado.qtd_acompanhantes : 0)}</TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
