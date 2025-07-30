@@ -17,11 +17,11 @@ const Index = () => {
 
       {/* Hero Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center opacity-90"
+        className="absolute inset-0 opacity-90"
         style={{ 
           backgroundImage: `url(/lovable-uploads/1adef081-bb19-4273-8b89-c693b0da143c.png)`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center center',
           backgroundRepeat: 'no-repeat'
         }}
       />
