@@ -4,7 +4,7 @@ import { Sparkles, Heart, Gift } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-rose-50/50">
       {/* Container centralizado */}
       <div className="container mx-auto min-h-screen flex items-center">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full items-center">
