@@ -1,5 +1,5 @@
 import ConviteForm from "@/components/ConviteForm";
-import partyHero from "@/assets/party-hero.jpg";
+// Usando a imagem enviada pelo usuário como plano de fundo
 import { Sparkles, Heart, Gift } from "lucide-react";
 
 const Index = () => {
@@ -15,8 +15,8 @@ const Index = () => {
 
       {/* Hero Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center opacity-30"
-        style={{ backgroundImage: `url(${partyHero})` }}
+        className="absolute inset-0 bg-cover bg-center opacity-80"
+        style={{ backgroundImage: `url(/lovable-uploads/1adef081-bb19-4273-8b89-c693b0da143c.png)` }}
       />
       
       {/* Content */}
