@@ -4,7 +4,9 @@ import { Sparkles, Heart, Gift } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-party relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Overlay para melhorar legibilidade */}
+      <div className="absolute inset-0 bg-black/20 z-5" />
       {/* Background decorative elements */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-10 left-10 w-20 h-20 bg-secondary rounded-full blur-xl animate-pulse" />
@@ -15,8 +17,13 @@ const Index = () => {
 
       {/* Hero Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center opacity-80"
-        style={{ backgroundImage: `url(/lovable-uploads/1adef081-bb19-4273-8b89-c693b0da143c.png)` }}
+        className="absolute inset-0 bg-cover bg-center opacity-90"
+        style={{ 
+          backgroundImage: `url(/lovable-uploads/1adef081-bb19-4273-8b89-c693b0da143c.png)`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
       />
       
       {/* Content */}
