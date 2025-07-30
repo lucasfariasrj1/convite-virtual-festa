@@ -29,33 +29,25 @@ const Index = () => {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
         {/* Header */}
-        <div className="text-center mb-8 max-w-2xl">
+        {/* <div className="text-center mb-8 max-w-2xl">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Sparkles className="w-8 h-8 text-secondary animate-pulse" />
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-button bg-clip-text text-transparent">
-              Festa de Aniversário
-            </h1>
             <Gift className="w-8 h-8 text-accent animate-pulse" />
           </div>
           
-          <p className="text-lg md:text-xl text-foreground/80 mb-2 font-medium">
-            Uma celebração especial está chegando!
-          </p>
+        
           
           <div className="flex items-center justify-center gap-2 text-muted-foreground">
             <Heart className="w-5 h-5 text-primary" />
             <span>Confirme sua presença e faça parte dessa alegria</span>
             <Heart className="w-5 h-5 text-primary" />
           </div>
-        </div>
+        </div> */}
 
         {/* Form */}
         <ConviteForm />
         
-        {/* Footer */}
-        <div className="mt-8 text-center text-sm text-muted-foreground">
-          <p>✨ Mal podemos esperar para celebrar com você! ✨</p>
-        </div>
+
       </div>
     </div>
   );
